@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { spells } from "@/data/all_spells";
 
 export default function Home() {
