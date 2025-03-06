@@ -1,16 +1,26 @@
+"use client";
+import { useTheme } from "next-themes";
 import { spells } from "@/data/all_spells";
 
 export default function Home() {
-  console.log("spells", spells)
+  const { theme, setTheme } = useTheme();
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <button
+        className="border-2 rounded-sm p-2"
+        onClick={() =>
+          setTheme(theme === "dark" ? "light" : "dark")
+        }
+      >
+        Toggle {theme === "dark" ? "Light" : "Dark"} Mode
+      </button>
+      <header className="flex">5e Spells</header>
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-
-        <div>{spells
-          // .filter((spell) => spell.details.duration.toLowerCase().includes("conc"))
-          .map((spell, index) => (
+        <div>
+          {spells.map((spell, index) => (
             <div key={index}>
-              <div className="">{spell.name}</div>
+              <div>{spell.name}</div>
               <div>{spell.details.duration}</div>
               <div>{spell.details.level}</div>
               <div>{spell.details.school}</div>
@@ -19,17 +29,13 @@ export default function Home() {
               <div>{spell.details.description}</div>
               <div>{spell.details.spellList}</div>
               <div>{spell.details.upcast}</div>
-              <br></br>
+              <br />
             </div>
-          ))}</div>
-
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-
+          ))}
         </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-
+        chyea
       </footer>
     </div>
   );
