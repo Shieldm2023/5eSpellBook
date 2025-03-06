@@ -8,7 +8,7 @@ export default function Home() {
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
 
         <div>{spells
-          .filter((spell) => spell.details.duration.toLowerCase().includes("conc"))
+          // .filter((spell) => spell.details.duration.toLowerCase().includes("conc"))
           .map((spell, index) => (
             <div key={index}>
               <div className="">{spell.name}</div>
