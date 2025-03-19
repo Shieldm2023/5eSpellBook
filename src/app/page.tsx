@@ -81,20 +81,23 @@ export default function Home() {
       // 0 = ignore, 1 = required, -1 = forbidden.
       let componentsMatch = true;
       const compStr = details.components.toLowerCase();
-      for (const comp of ["V", "S", "M", "gp"]) {
-        // Map "gp" to "$" for the state, but use "gp" as the search term in the spell's components.
-        const key = comp === "gp" ? "$" : comp;
-        const searchTerm = comp === "gp" ? "gp" : comp.toLowerCase();
+      for (const comp of ["V", "S", "M", "$"]) {
+        const key = comp;
+        const searchTerms = key === "$" ? ["gp", "tax"] : [comp.toLowerCase()];
+
         const filterVal = componentsFilter[key as "V" | "S" | "M" | "$"];
-        if (filterVal === 1 && !compStr.includes(searchTerm)) {
+
+        if (filterVal === 1 && !searchTerms.some(term => compStr.includes(term))) {
           componentsMatch = false;
           break;
         }
-        if (filterVal === -1 && compStr.includes(searchTerm)) {
+        if (filterVal === -1 && searchTerms.some(term => compStr.includes(term))) {
           componentsMatch = false;
           break;
         }
       }
+
+
 
       return (
         nameMatches &&
@@ -297,7 +300,7 @@ export default function Home() {
 
                 setLevelFilter("");
                 setSchoolFilter("");
-
+                setCastingTimeFilter("");
                 setSpellListFilter("");
                 setConcentrationFilter("");
                 setRitualFilter("");
