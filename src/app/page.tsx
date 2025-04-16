@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { spells } from "@/data/all_spells";
 import { FunnelIcon } from "@heroicons/react/24/outline";
@@ -8,6 +8,7 @@ import { MoonIcon } from "@heroicons/react/24/solid";
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [nameFilter, setNameFilter] = useState("");
   const [levelFilter, setLevelFilter] = useState("");
   const [spellListFilter, setSpellListFilter] = useState("");
@@ -26,6 +27,13 @@ export default function Home() {
   const classes = ["Artificer", "Bard", "Cleric", "Druid", "Paladin", "Ranger", "Sorcerer", "Warlock", "Wizard"];
   const schools = ["Abjuration", "Conjuration", "Divination", "Enchantment", "Evocation", "Illusion", "Necromancy", "Transmutation"];
   const castingTimes = ["1 action", "1 bonus action", "1 reaction", "1 minute", "10 minutes", "1 hour", "8 hours", "12 hours", "24 hours"];
+
+  const labelMap = {
+    V: "Verbal",
+    S: "Somatic",
+    M: "Material",
+    gp: "Cost",
+  }
 
   const toggleComponentFilter = (comp: "V" | "S" | "M" | "gp") => {
     const key = comp === "gp" ? "$" : comp;
@@ -127,6 +135,11 @@ export default function Home() {
   // console.log("unique range", uniqueRange);
   // console.log("unique casting tiem", uniqueCastingTime);
 
+  // Add this useEffect to handle client-side only rendering
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className="grid grid-rows-[60px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       {/* Navigation Bar */}
@@ -135,7 +148,11 @@ export default function Home() {
           className="border-2 rounded-sm p-2 bg-[var(--background)] text-[var(--text-primary)] border-[var(--card-border)]"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
         >
-          {theme === "dark" ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
+          {mounted ? (
+            theme === "dark" ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />
+          ) : (
+            <div className="w-5 h-5"></div> // Placeholder while not mounted
+          )}
         </button>
 
         <div className="flex-1 max-w-xl">
@@ -163,7 +180,7 @@ export default function Home() {
             <div className="fixed top-0 right-0 h-full w-full bg-[var(--background)] shadow-lg z-40 overflow-y-auto transition-transform duration-300">
               <div className="p-2 flex justify-between items-center border-b border-[var(--card-border)]">
                 <h2 className="text-lg font-bold text-[var(--text-primary)]">Filters</h2>
-                <button onClick={() => setShowFilters(false)} className="text-sm border p-4 rounded z-100 bg-[var(--background)] text-[var(--text-primary)] border-[var(--card-border)]">
+                <button onClick={() => setShowFilters(false)} className="border-2 rounded-sm p-2 z-100 bg-[var(--background)] text-[var(--text-primary)] border-[var(--card-border)]">
                   Close
                 </button>
               </div>
@@ -171,6 +188,27 @@ export default function Home() {
                 <div className="justify-center">
                   {/* Responsive grid for filter controls */}
                   <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+
+                    {/* Spell List Filter */}
+                    <div>
+                      <label htmlFor="spellListFilter" className="block text-sm font-medium mb-1 text-[var(--text-primary)]">
+                        Spell List:
+                      </label>
+                      <select
+                        id="spellListFilter"
+                        value={spellListFilter}
+                        onChange={(e) => setSpellListFilter(e.target.value)}
+                        className="border rounded-lg p-2 w-full bg-[var(--background)] text-[var(--text-primary)] border-[var(--card-border)]"
+                      >
+                        <option value="">All Spell Lists</option>
+                        {classes.map((sl, index) => (
+                          <option key={index} value={sl} className="bg-[var(--background)] text-[var(--text-primary)]">
+                            {sl}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
                     {/* Level Filter */}
                     <div>
                       <label htmlFor="levelFilter" className="block text-sm font-medium mb-1 text-[var(--text-primary)]">
@@ -235,6 +273,7 @@ export default function Home() {
                     <div>
                       <label className="block text-sm font-medium mb-1 text-[var(--text-primary)]">Components:</label>
                       <div className="flex gap-2">
+
                         {(["V", "S", "M", "gp"] as Array<"V" | "S" | "M" | "gp">).map((comp) => {
                           const key: "V" | "S" | "M" | "$" = comp === "gp" ? "$" : comp;
                           return (
@@ -248,36 +287,16 @@ export default function Home() {
                                   : "bg-[var(--tag-background)] text-[var(--text-primary)] border-[var(--card-border)]"
                                 }`}
                             >
-                              {comp === "gp" ? "$" : comp}{" "}
+                              {labelMap[comp]}{" "}
                               {componentsFilter[key] === 1
-                                ? "(+)"
+                                ? "(included)"
                                 : componentsFilter[key] === -1
-                                  ? "(-)"
+                                  ? "(excluded)"
                                   : ""}
                             </button>
                           );
                         })}
                       </div>
-                    </div>
-
-                    {/* Spell List Filter */}
-                    <div>
-                      <label htmlFor="spellListFilter" className="block text-sm font-medium mb-1 text-[var(--text-primary)]">
-                        Spell List:
-                      </label>
-                      <select
-                        id="spellListFilter"
-                        value={spellListFilter}
-                        onChange={(e) => setSpellListFilter(e.target.value)}
-                        className="border rounded-lg p-2 w-full bg-[var(--background)] text-[var(--text-primary)] border-[var(--card-border)]"
-                      >
-                        <option value="">All Spell Lists</option>
-                        {classes.map((sl, index) => (
-                          <option key={index} value={sl} className="bg-[var(--background)] text-[var(--text-primary)]">
-                            {sl}
-                          </option>
-                        ))}
-                      </select>
                     </div>
 
                     {/* Ritual Button */}
