@@ -298,6 +298,7 @@ export default function Home() {
                         })}
                       </div>
                     </div>
+                    <div></div>
 
                     {/* Ritual Button */}
                     <div className="flex items-end">
@@ -360,6 +361,141 @@ export default function Home() {
         </div>
       </main>
       <div className="flex flex-col gap-4 w-full max-w-5xl">
+        {/* Filter Summary Section */}
+        {(nameFilter || levelFilter || spellListFilter || ritualFilter ||
+          concentrationFilter || schoolFilter || castingTimeFilter ||
+          Object.values(componentsFilter).some(val => val !== 0)) && (
+            <div className="bg-[var(--tag-background)] border border-[var(--card-border)] rounded-lg p-3 text-sm text-[var(--text-secondary)]">
+              <div className="flex flex-wrap gap-2 items-center">
+                <span className="font-medium">Active Filters:</span>
+                {nameFilter && (
+                  <span className="bg-[var(--background)] px-2 py-1 rounded border border-[var(--card-border)] flex items-center gap-1">
+                    Name: {nameFilter}
+                    <button
+                      onClick={() => setNameFilter("")}
+                      className="ml-1 text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+                      aria-label="Clear name filter"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+                {levelFilter && (
+                  <span className="bg-[var(--background)] px-2 py-1 rounded border border-[var(--card-border)] flex items-center gap-1">
+                    Level: {levelFilter}
+                    <button
+                      onClick={() => setLevelFilter("")}
+                      className="ml-1 text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+                      aria-label="Clear level filter"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+                {spellListFilter && (
+                  <span className="bg-[var(--background)] px-2 py-1 rounded border border-[var(--card-border)] flex items-center gap-1">
+                    Class: {spellListFilter}
+                    <button
+                      onClick={() => setSpellListFilter("")}
+                      className="ml-1 text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+                      aria-label="Clear class filter"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+                {ritualFilter && (
+                  <span className="bg-[var(--background)] px-2 py-1 rounded border border-[var(--card-border)] flex items-center gap-1">
+                    Ritual
+                    <button
+                      onClick={() => setRitualFilter("")}
+                      className="ml-1 text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+                      aria-label="Clear ritual filter"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+                {concentrationFilter && (
+                  <span className="bg-[var(--background)] px-2 py-1 rounded border border-[var(--card-border)] flex items-center gap-1">
+                    Concentration
+                    <button
+                      onClick={() => setConcentrationFilter("")}
+                      className="ml-1 text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+                      aria-label="Clear concentration filter"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+                {schoolFilter && (
+                  <span className="bg-[var(--background)] px-2 py-1 rounded border border-[var(--card-border)] flex items-center gap-1">
+                    School: {schoolFilter}
+                    <button
+                      onClick={() => setSchoolFilter("")}
+                      className="ml-1 text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+                      aria-label="Clear school filter"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+                {castingTimeFilter && (
+                  <span className="bg-[var(--background)] px-2 py-1 rounded border border-[var(--card-border)] flex items-center gap-1">
+                    Casting Time: {castingTimeFilter}
+                    <button
+                      onClick={() => setCastingTimeFilter("")}
+                      className="ml-1 text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+                      aria-label="Clear casting time filter"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
+                {Object.entries(componentsFilter).map(([key, value]) => {
+                  if (value === 0) return null;
+                  const label = key === "$" ? "Cost" : key;
+                  return (
+                    <span key={key} className="bg-[var(--background)] px-2 py-1 rounded border border-[var(--card-border)] flex items-center gap-1">
+                      {label}: {value === 1 ? "Required" : "Excluded"}
+                      <button
+                        onClick={() => {
+                          setComponentsFilter(prev => ({
+                            ...prev,
+                            [key]: 0
+                          }));
+                        }}
+                        className="ml-1 text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+                        aria-label={`Clear ${label} component filter`}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  );
+                })}
+                <button
+                  onClick={() => {
+                    setNameFilter("");
+                    setLevelFilter("");
+                    setSchoolFilter("");
+                    setCastingTimeFilter("");
+                    setSpellListFilter("");
+                    setConcentrationFilter("");
+                    setRitualFilter("");
+                    setComponentsFilter({
+                      V: 0,
+                      S: 0,
+                      M: 0,
+                      $: 0,
+                    });
+                  }}
+                  className="ml-auto text-xs underline hover:text-[var(--text-primary)]"
+                >
+                  Clear All
+                </button>
+              </div>
+            </div>
+          )}
         {filteredSpells.map((spell, index) => (
           <div
             key={index}
