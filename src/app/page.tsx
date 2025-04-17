@@ -5,6 +5,9 @@ import { spells } from "@/data/all_spells";
 import { FunnelIcon } from "@heroicons/react/24/outline";
 import { SunIcon } from "@heroicons/react/24/solid";
 import { MoonIcon } from "@heroicons/react/24/solid";
+import { useSpells } from "@/data/useSpells";
+
+
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
@@ -23,7 +26,9 @@ export default function Home() {
     $: 0,
   });
   const [showFilters, setShowFilters] = useState(false);
-
+  const [showPathfinderSpells, setShowPathfinderSpells] = useState(false);
+  const[Spells, setSpells] = useState([]);
+  
   const classes = ["Artificer", "Bard", "Cleric", "Druid", "Paladin", "Ranger", "Sorcerer", "Warlock", "Wizard"];
   const schools = ["Abjuration", "Conjuration", "Divination", "Enchantment", "Evocation", "Illusion", "Necromancy", "Transmutation"];
   const castingTimes = ["1 action", "1 bonus action", "1 reaction", "1 minute", "10 minutes", "1 hour", "8 hours", "12 hours", "24 hours"];
@@ -42,6 +47,22 @@ export default function Home() {
       [key]: prev[key] === 0 ? 1 : prev[key] === 1 ? -1 : 0,
     }));
   };
+
+  const SpellList = () => {
+    const { spells, loading, error } = useSpells();
+  
+    if (loading) return <p>Loading…</p>;
+    if (error)   return <p>Error: {error}</p>;
+  
+    return (
+      <ul>
+        {spells.map(s => <li key={s.name}>{s.name}</li>)}
+      </ul>
+    );
+  };
+
+
+
 
   const uniqueLevels = useMemo(() =>
     [...new Set(spells.map((spell) => spell.details.level.toLowerCase()))], []
