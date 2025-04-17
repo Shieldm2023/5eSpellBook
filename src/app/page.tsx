@@ -143,7 +143,7 @@ export default function Home() {
   console.log("all spells", spells);
 
   return (
-    <div className="grid grid-cols-[60px_1fr_20px] items-start justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="grid grid-rows-[5px_1fr_20px] items-start justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       {/* Navigation Bar */}
       <nav className="fixed top-0 left-0 right-0 h-[60px] bg-[var(--background)] border-b border-[var(--card-border)] flex items-center justify-center px-4 gap-4 z-10">
         <button
