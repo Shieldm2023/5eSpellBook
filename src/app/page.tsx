@@ -140,8 +140,10 @@ export default function Home() {
     setMounted(true);
   }, []);
 
+  console.log("all spells", spells);
+
   return (
-    <div className="grid grid-rows-[60px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="grid grid-rows-[5px_1fr_20px] items-start justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       {/* Navigation Bar */}
       <nav className="fixed top-0 left-0 right-0 h-[60px] bg-[var(--background)] border-b border-[var(--card-border)] flex items-center justify-center px-4 gap-4 z-10">
         <button
@@ -281,9 +283,9 @@ export default function Home() {
                               key={comp}
                               onClick={() => toggleComponentFilter(comp)}
                               className={`border rounded-lg p-2 flex-1 transition-colors ${componentsFilter[key] === 1
-                                ? "bg-green-500 text-white"
+                                ? "bg-green-700 text-white"
                                 : componentsFilter[key] === -1
-                                  ? "bg-red-500 text-white"
+                                  ? "bg-black-900 text-gray"
                                   : "bg-[var(--tag-background)] text-[var(--text-primary)] border-[var(--card-border)]"
                                 }`}
                             >
